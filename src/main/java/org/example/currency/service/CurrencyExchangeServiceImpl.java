@@ -1,37 +1,66 @@
 package org.example.currency.service;
 
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.RequiredArgsConstructor;
+import lombok.Data;
 import org.example.currency.domain.CurrencyExchangeRates;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @Service
-@RequiredArgsConstructor
+@Data
 public class CurrencyExchangeServiceImpl implements CurrencyExchangeService {
 
     private final RestTemplate restTemplate;
-    private static final String API_URL = "https://api.exchangeratesapi.io/v1/latest";
-    private static final String API_KEY = "e87e83103dc6ee1211b56e73c606c0cd";
-    //private final ObjectMapper jacksonObjectMapper;
+    private final ObjectMapper objectMapper;
+    private final String key;
+    private final String constantPartOfUrl;
 
-    @Override
-    public CurrencyExchangeRates getCurrencyExchangeRates() {
-        String url = API_URL/* + "?api_key=" + API_KEY + "&currency=" + currency*/;
-        return restTemplate.getForObject(API_URL, CurrencyExchangeRates.class);
+    public CurrencyExchangeServiceImpl(
+            RestTemplate restTemplate,
+            ObjectMapper objectMapper,
+            @Value("${currency.endpoint.key}") String key,
+            @Value("${currency.endpoint.url}") String constantPartOfUrl
+    ) {
+        this.restTemplate = restTemplate;
+        this.objectMapper = objectMapper;
+        this.key = key;
+        this.constantPartOfUrl = constantPartOfUrl;
     }
 
-    /*private CurrencyExchangeRates readAndConvert(String currency, ResponseEntity<String> response) {
+    @Override
+    public CurrencyExchangeRates getRates() {
+        String url = constantPartOfUrl + "?access_key=" + key;
+        return restTemplate.getForObject(url, CurrencyExchangeRates.class);
+    }
+
+    @Override
+    public CurrencyExchangeRates getCurrencyExchangeRates(String base, String symbol) {
+        String url = constantPartOfUrl + "?access_key=" + key + "&base=" + base + "&symbols=" + symbol;
+        ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
+        return readAndConvert(base, symbol, response);
+    }
+
+
+    private CurrencyExchangeRates readAndConvert(String base, String symbol, ResponseEntity<String> response) {
         JsonNode root;
         try {
-            root = jacksonObjectMapper.readTree(response.getBody());
+            root = objectMapper.readTree(response.getBody());
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
-        //надо понять что возвращает и что вытаскивает из этого дерева(ответа апи)
-        //TODO не забывать делать промежуточные коммиты в течении работы над веткой
-    }*/
+        Map<String, Double> rateMap = new HashMap<>();
+        rateMap.put(symbol, root.get("rates").doubleValue());
+        return CurrencyExchangeRates.builder()
+                .base(base)
+                .rates(rateMap)
+                .build();
+    }
 }
