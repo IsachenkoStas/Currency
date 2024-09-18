@@ -1,9 +1,10 @@
 package org.example.currency.service;
 
+import org.example.currency.DTO.CurrencyRateDto;
 import org.example.currency.domain.CurrencyExchangeRates;
 
 public interface CurrencyExchangeService {
-    CurrencyExchangeRates getCurrencyExchangeRates(String base, String symbol);
+    CurrencyRateDto getCurrencyExchangeRates(String base, String target);
 
-    CurrencyExchangeRates getRates();
+    CurrencyExchangeRates getRatesOfBaseCurrency(String base);
 }

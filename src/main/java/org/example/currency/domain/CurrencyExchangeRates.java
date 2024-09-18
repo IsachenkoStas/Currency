@@ -8,6 +8,6 @@ import java.util.Map;
 @Data
 @Builder
 public class CurrencyExchangeRates {
-    private String base;
-    private Map<String, Double> rates;
+    private String base_code;
+    private Map<String, Double> conversion_rates;
 }
