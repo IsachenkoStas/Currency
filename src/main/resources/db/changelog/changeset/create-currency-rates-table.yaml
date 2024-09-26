@@ -1,0 +1,41 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-currency-rates-table
+      author: Stanislav
+      changes:
+
+        - createSequence:
+            sequenceName: curr_id_seq
+            startValue: 1
+            incrementBy: 1
+
+        - createTable:
+            tableName: currency-rates
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: base_currency
+                  type: varchar
+                  constraints:
+                    nullable: false
+              - column:
+                  name: target_currency
+                  type: varchar
+                  constraints:
+                    nullable: false
+              - column:
+                  name: currency_rate
+                  type: decimal
+                  constraints:
+                    nullable: false
+              - column:
+                  name: last_updated
+                  type: timestamp
+                  constraints:
+                    nullable: false

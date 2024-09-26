@@ -1,4 +1,4 @@
-package org.example.currency.DTO;
+package org.example.currency.dto;
 
 import lombok.Builder;
 import lombok.Data;
@@ -9,5 +9,4 @@ public class CurrencyRateDto {
     private String base_code;
     private String target_code;
     private Double conversion_rate;
-
 }
