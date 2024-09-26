@@ -1,0 +1,26 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-currency-table
+      author: Stanislav
+      changes:
+
+        - createSequence:
+            sequenceName: curr_code_id_seq
+            startValue: 1
+            incrementBy: 1
+
+        - createTable:
+            tableName: currency
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: currency_code
+                  type: varchar
+                  constraints:
+                    nullable: false

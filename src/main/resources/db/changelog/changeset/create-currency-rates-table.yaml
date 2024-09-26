@@ -5,7 +5,7 @@ databaseChangeLog:
       changes:
 
         - createSequence:
-            sequenceName: id
+            sequenceName: curr_id_seq
             startValue: 1
             incrementBy: 1
 

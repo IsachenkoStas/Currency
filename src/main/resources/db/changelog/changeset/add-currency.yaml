@@ -1,0 +1,26 @@
+databaseChangeLog:
+  - changeSet:
+      id: add-currency
+      author: Stanislav
+      changes:
+        - insert:
+            tableName: currency
+            columns:
+              - column:
+                  name: currency_code
+                  value: USD
+
+
+        - insert:
+            tableName: currency
+            columns:
+              - column:
+                  name: currency_code
+                  value: EUR
+
+        - insert:
+            tableName: currency
+            columns:
+              - column:
+                  name: currency_code
+                  value: RUB
